@@ -1,4 +1,6 @@
-### Introduction
+# Heaps and Priority Queue
+
+## Introduction
 
 https://www.hackerearth.com/practice/notes/heaps-and-priority-queues/
 
@@ -88,7 +90,7 @@ int main() {
 }
 ```
 
-### Priority Queue Implementations
+## Priority Queue Implementations
 
 ```cpp
 // pq with custom comparator using lambda.
@@ -117,3 +119,24 @@ priority_queue<int> pq;
 priority_queue<int, vector<int>, greater<int>> pq;
 
 ```
+
+____________
+
+## Practice Problems
+
+### LC378 - Find the Kth Smallest Element in a Sorted Matrix 
+
+https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/ 
+Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
+
+#### Similar Problems
+https://leetcode.com/problems/find-k-pairs-with-smallest-sums/description/
+
+https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/description/
+
+https://leetcode.com/problems/find-k-th-smallest-pair-distance/description/
+
+https://leetcode.com/problems/k-th-smallest-prime-fraction/description/
+
+
+

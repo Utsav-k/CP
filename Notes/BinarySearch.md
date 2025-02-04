@@ -1,3 +1,9 @@
+# Binary Search
+## Resources
+Topcoder Article For Basics - https://www.topcoder.com/thrive/articles/Binary%20Search
+
+Leetcode (Problem Focused) - https://leetcode.com/discuss/study-guide/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems
+
 ### Implementation
 
 ```cpp
@@ -157,3 +163,14 @@ int findMinInRotatedArray(vector<int>& nums) {
     return nums[l];
 }
 ```
+
+
+## Practice Problems
+
+LC1482 - https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/description/
+
+LC74 - https://leetcode.com/problems/search-a-2d-matrix/description/
+
+LC719 - https://leetcode.com/problems/find-k-th-smallest-pair-distance/description/ 
+
+LC668 - https://leetcode.com/problems/kth-smallest-number-in-multiplication-table/solutions/
