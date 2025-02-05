@@ -146,7 +146,10 @@ int binSearchInRotatedArray(vector<int> &a, int target) {
 ### Find min in Rotated Sorted Array
 
 ```cpp
-// Just compare the mid with last and decide the search space, If comparing with first, needs the extra validation in case there are no rotations.
+/* 
+Just compare the mid with last and decide the search space, 
+If comparing with first, needs the extra validation in case there are no rotations.
+*/
 int findMinInRotatedArray(vector<int>& nums) {
     int n = nums.size();
     int l = 0, r = n-1;
@@ -166,6 +169,11 @@ int findMinInRotatedArray(vector<int>& nums) {
 
 
 ## Practice Problems
+LC1011 - https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/description/
+
+LC875 - https://leetcode.com/problems/koko-eating-bananas/description/
+
+LC1283 - https://leetcode.com/problems/find-the-smallest-divisor-given-a-threshold/description/
 
 LC1482 - https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/description/
 
