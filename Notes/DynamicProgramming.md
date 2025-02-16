@@ -9,29 +9,18 @@ https://leetcode.com/discuss/general-discussion/662866/DP-for-Beginners-Problems
 https://leetcode.com/discuss/general-discussion/1050391/Must-do-Dynamic-programming-Problems-Category-wise
 
 
-<<<<<<< HEAD
-
 ## Problems (Category Wise)
 
 ### Knapsack (0/1)
 
-Subset Sum
 
-Equal Sum Partition
-
-Count of subset sum
-
-Minimum Subset Sum Diff
-
-Target Sum
-
-Number of Subsets with Given Difference
+_____________________
 
 ### Unbounded Knapsack
 
-[Coin Change](https://leetcode.com/problems/coin-change/) (Classic Problem)
+#### [Coin Change](https://leetcode.com/problems/coin-change/) (Classic Problem)
 
-[Coin Change II](https://leetcode.com/problems/coin-change-2/) 
+#### [Coin Change II](https://leetcode.com/problems/coin-change-2/) 
 (Read about why the coins should be in outer loop)
 
 ```cpp
@@ -47,8 +36,8 @@ int change(int amount, vector<int>& coins) {
 }
 ```
 
-[CombinationSum4](https://leetcode.com/problems/combination-sum-iv/description/) 
-(This is similar to Coing Change 2 but the repititions are allowed, Just reverse the loop)
+#### [CombinationSum4](https://leetcode.com/problems/combination-sum-iv/description/) 
+(This is similar to Coin Change 2 but the duplicates (order change of the array) are allowed, Just reverse the loop)
 ```cpp
 int combinationSum4(vector<int>& A, int target) {
     int n = A.size();
@@ -63,7 +52,7 @@ int combinationSum4(vector<int>& A, int target) {
 }
 ```
 
-[Minimum Cost for Tickets](https://leetcode.com/problems/minimum-cost-for-tickets/) 
+#### [Minimum Cost for Tickets](https://leetcode.com/problems/minimum-cost-for-tickets/) 
 (It has the added complexity due to days not being continuous)
 
 ```cpp
@@ -89,7 +78,7 @@ public:
 };
 ```
 
-[Rod Cutting Problem](https://www.geeksforgeeks.org/cutting-a-rod-dp-13/) 
+#### [Rod Cutting Problem](https://www.geeksforgeeks.org/cutting-a-rod-dp-13/) 
 (Classic DP Problem, Similar Solution to Coin Change 2)
 ```cpp
 int main() {
@@ -108,6 +97,73 @@ int main() {
     }
     cout << dp[n] << " ";
     return 0;
+}
+```
+
+_____________________
+
+### Subset Sum Problems
+
+#### [416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/description/)
+
+Just another variant of Coin Change II
+
+Find if the subsetSum of totalSum/2 is possible.
+
+**Important - can also be used to find the min difference of subsets**
+
+#### [1049.Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/description/) 
+
+Tricky Problem but resolves to Minimum Subset Sum Difference
+
+
+```cpp
+int lastStoneWeightII(vector<int>& A) {
+    int n = A.size();
+    int tw = accumulate(A.begin(), A.end(), 0);
+    
+    // dp[i] represents if a subset sum of i is possible 
+    vector<int> dp(tw+1, 0);
+    dp[0] = 1;
+    for(int &x:A) {
+        for(int i=tw; i>=x; i--) {
+            dp[i] |= dp[i-x];
+        }
+    }
+    int ans = INT_MAX;
+    for(int sum=0; sum<=tw; sum++) {
+        if(dp[sum]) {
+            ans = min(ans, abs(sum - (tw-sum)));
+        }
+    }
+    return ans;
+}
+```
+
+#### [494. Target Sum](https://leetcode.com/problems/target-sum/description/)
+
+Classical DP - Find the number of subsets to reach a sum of K
+
+```cpp
+int findTargetSumWays(vector<int>& A, int T) {
+    int ts = accumulate(A.begin(), A.end(), 0);
+    // Not possible as all elements are positive
+    if(ts < T) return 0;
+    // fractional is not possible
+    if((ts + T) & 1) return 0;
+
+    int target = (T + ts) >> 1;
+    if(target < 0) return 0;
+
+    // Just find the subsets with sum = target.
+    vector<int> dp(target+1, 0);
+    dp[0] = 1;
+    for(int &x:A) {
+        for(int i=target; i>=x; --i) {
+            dp[i] += dp[i-x];
+        }
+    }
+    return dp[target];
 }
 ```
 ____________________________
@@ -133,11 +189,7 @@ LC322(Classic DP) - https://leetcode.com/problems/coin-change/description/
 
 LC650 - https://leetcode.com/problems/2-keys-keyboard/description/  (Top Down is easy, Bottom up can be tricky. Read the LC article for all solutions)
 
-<<<<<<< HEAD
-LC983 - https://leetcode.com/problems/minimum-cost-for-tickets/description/
 
-
-=======
 LC120 - https://leetcode.com/problems/triangle/description/
 
 LC279 - https://leetcode.com/problems/perfect-squares/description (Coin Change kind of problem)
@@ -206,3 +258,117 @@ int minDistance(string word1, string word2) {
         return dp[m][n];
     }
 ```
+
+[115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/)
+
+Hard Problem based on a similar concept
+```cpp
+/*
+Table is as follows
+
+    b a b g b a g
+  1 1 1 1 1 1 1 1  This is initialized to account for 0 length and to make life easier.
+b 0 1 1 2 2 3 3 3
+a 0 0 1 1 1 1 4 4
+g 0 0 0 0 1 1 1 5
+*/
+
+int numDistinct(string s, string t) {
+        int m = t.size();
+        int n = s.size();
+        
+        vector<vector<unsigned int>> dp(m+1, vector<unsigned int>(n+1));
+
+        for(int j=0; j<=n; j++) {
+            dp[0][j] = 1;
+        }
+        for(int i=1; i<=m; ++i) {
+            for(int j=1; j<=n; ++j) {
+                if(t[i-1] == s[j-1]) {
+                    // In this case, the carryover from {i-1, j-1} is considered 
+                    // along with the current value.
+                    dp[i][j] = dp[i-1][j-1] + dp[i][j-1];
+                } else {
+                    // If a character does not match then the total is the number for the current char
+                    // Because to create a successful match, the current char should match.
+                    dp[i][j] = dp[i][j-1];
+                }
+            }
+        }
+        return dp[m][n];
+    }
+```
+
+[1092. Shortest Common Supersequence](https://leetcode.com/problems/shortest-common-supersequence/description/)
+
+Problem based on Longest Common Subsequence
+______________
+
+### Longest Palindromic Subsequence
+
+[516. Longest Palindromic Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
+
+Think of the recurrence first and then design the loop. 
+
+```cpp
+if(s[i] == s[j]) dp[i][j] = dp[i+1][j-1]; else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+
+Now think of how to set the loops for the correct evaluation order.
+
+Base case is dp[i][i] = 1;
+
+// Or answer is just LCS(s, reverse(s))
+
+```
+
+
+___________
+
+### Longest Palindromic Substring
+
+[5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/description/)
+
+```
+Dp[i][j] means if string is palindrome;
+
+dp[i][j] == s[i] == s[j] ? (len < 4 || dp[i+1][j-1]) : 0;
+
+```
+
+### Longest Increasing Subsequence
+
+[300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)
+
+```
+if(A[i] > A[j]) {
+    dp[i] = max(dp[i], dp[j] + 1);
+}
+```
+
+The Greedy Solution is worth reading.
+[Greedy Article on LC](https://leetcode.com/problems/longest-increasing-subsequence/solutions/1326308/c-python-dp-binary-search-bit-segment-tree-solutions-picture-explain-o-nlogn/)
+
+```cpp
+// With Greedy and bSearch 
+
+int lengthOfLIS(vector<int>& A) {
+    int n = A.size();
+    vector<int> ss;
+    for(int &x:A) {
+        if(ss.empty() || ss.back() < x) {
+            ss.push_back(x);
+        }
+        else {
+            // Find the number larger than the current and replace
+            // To maintain the stack and possible solution ahead.
+            auto it = lower_bound(ss.begin(), ss.end(), x);
+            *it = x; // Replacing the number
+        }
+    }
+    return ss.size();
+}
+
+```
+
+Follow Up : Retrieve the Sequence itself.
+
