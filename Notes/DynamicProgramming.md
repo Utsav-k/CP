@@ -11,10 +11,6 @@ https://leetcode.com/discuss/general-discussion/1050391/Must-do-Dynamic-programm
 
 ## Problems (Category Wise)
 
-### Knapsack (0/1)
-
-
-_____________________
 
 ### Unbounded Knapsack
 
@@ -168,13 +164,6 @@ int findTargetSumWays(vector<int>& A, int T) {
 ```
 ____________________________
 
-### Merging Intervals
-
-
-[Min Cost to Cut a Stick](https://leetcode.com/problems/minimum-cost-to-cut-a-stick/)
-
-
-__________________________
 
 ### Min-Max Kind of Problems
 
@@ -200,6 +189,8 @@ LC983 - https://leetcode.com/problems/minimum-cost-for-tickets/description/
 
 ___________
 
+
+## DP On Strings (Substring/Subsequence)
 
 ### Longest Common Subsequence
 
@@ -311,7 +302,7 @@ ______________
 Think of the recurrence first and then design the loop. 
 
 ```cpp
-if(s[i] == s[j]) dp[i][j] = dp[i+1][j-1]; else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+if(s[i] == s[j]) dp[i][j] = 2 + dp[i+1][j-1]; else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
 
 Now think of how to set the loops for the correct evaluation order.
 
@@ -372,3 +363,238 @@ int lengthOfLIS(vector<int>& A) {
 
 Follow Up : Retrieve the Sequence itself.
 
+
+_______________
+
+## Matrix Chain Multiplication
+
+### Discuss MCM
+
+Visualization with Example:
+Let’s revisit the example with P = [10, 30, 5, 60] and matrices:
+
+A_1: 10 x 30
+
+A_2: 30 x 5
+
+A_3: 5 x 60
+
+Subproblem (1, 3):
+We are computing the minimum cost to multiply A_1 x A_2 x A_3.
+
+Possible splits:
+
+k = 1: Split into (A_1) and (A_2 x A_3).
+
+k = 2: Split into (A_1 x A_2) and (A_3).
+
+Cost Calculation:
+For k = 1:
+
+Left part: A_1 (dimensions 10 x 30).
+
+Right part: A_2 x A_3 (dimensions 30 x 60).
+
+Cost = P[0] x P[1] x P[3] = 10 x 30 x 60 = 18000.
+
+For k = 2:
+
+Left part: A_1 x A_2 (dimensions 10 x 5).
+
+Right part: A_3 (dimensions 5 x 60).
+
+Cost = P[0] x P[2] x P[3] = 10 x 5 x 60 = 3000.
+
+The minimum cost is 3000, which corresponds to the split k = 2.
+
+Why P[i-1] x P[k] x P[j] Works:
+P[i-1]: The number of rows in the resulting matrix from the left part.
+
+P[k]: The number of columns in the resulting matrix from the left part (and rows in the resulting matrix from the right part).
+
+P[j]: The number of columns in the resulting matrix from the right part.
+
+This formula ensures that we correctly account for the dimensions of the matrices being multiplied at each step.
+
+```cpp
+// Function to compute the minimum number of scalar multiplications
+int matrixChainOrder(vector<int>& p) {
+    int n = p.size() - 1; // Number of matrices
+    // Create a DP table of size n x n initialized with 0
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+
+    // Fill the DP table diagonally
+    for (int length = 2; length <= n; length++) { // length is the chain length
+        for (int i = 0; i <= n - length; i++) {  // Starting index of the chain
+            int j = i + length - 1;              // Ending index of the chain
+            dp[i][j] = INT_MAX; // Initialize to a large value
+
+            // Try all possible splits
+            for (int k = i; k < j; k++) {
+                // Cost of multiplying (A_i...A_k) and (A_k+1...A_j)
+                int cost = dp[i][k] + dp[k + 1][j] + p[i] * p[k + 1] * p[j + 1];
+                // Update the minimum cost
+                if (cost < dp[i][j]) {
+                    dp[i][j] = cost;
+                }
+            }
+        }
+    }
+
+    // The result is the minimum cost to multiply matrices from 0 to n-1
+    return dp[0][n - 1];
+}
+```
+Explanation of the Code:
+
+Input:
+The input is a vector p where p[i-1] and p[i] represent the dimensions of matrix A_i.
+
+For example, if p = [10, 30, 5, 60], then:
+
+A_1 is 10 x 30,
+
+A_2 is 30 x 5,
+
+A_3 is 5 x 60.
+
+DP Table:
+dp[i][j] stores the minimum number of scalar multiplications needed to compute the product of matrices from A_i to A_j.
+
+Filling the DP Table:
+We iterate over all possible chain lengths (length from 2 to n).
+
+For each chain length, we iterate over all possible starting indices (i).
+
+For each starting index, we compute the ending index (j = i + length - 1).
+
+We then try all possible splits (k) and compute the cost of multiplying the two resulting subsequences.
+
+Cost Calculation:
+The cost of multiplying the two subsequences is:
+dp[i][k] + dp[k+1][j] + p[i] * p[k+1] * p[j+1]
+
+This represents:
+
+The cost of multiplying A_i to A_k,
+
+The cost of multiplying A_k+1 to A_j,
+
+The cost of multiplying the resulting matrices.
+
+Result:
+The final result is stored in dp[0][n-1], which represents the minimum cost to multiply all matrices from A_1 to A_n.
+
+
+
+________________
+
+## State Machine DP
+
+### Best Time to Buy and Sell Stocks problems
+
+[Best Time to Buy and Sell Stocks](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/)
+
+```cpp
+/*
+For this problem, you can just check what is the minimum before any price. Keep track of max, 
+that is the answer
+
+If multiple transactions are allowed -
+
+s0 = freeState
+s1 = boughtState
+
+s0[i] = max(s0[i-1], s1[i-1] + A[i-1])
+s1[i] = max(s1[i-1], s0[i-1] - A[i-1])
+
+at the end you want to be in s0 state so s0[n] is the answer
+*/
+int maxProfit(vector<int>& a) {
+    int maxProfit = 0;
+    int minSoFar = 1e9+7;
+    for(int &x:a) {
+        minSoFar = min(x, minSoFar);
+        maxProfit = max(maxProfit, x-minSoFar);
+    }
+    return maxProfit;
+}
+```
+
+[Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)
+
+```cpp
+/*
+s0 = freeState
+s1 = boughtState
+
+s0[i] = max(s0[i-1], s1[i-1] + A[i-1])
+s1[i] = max(s1[i-1], s0[i-1] - A[i-1])
+
+at the end you want to be in s0 state so s0[n] is the answer
+*/
+
+int maxProfit(vector<int>& p) {
+    int n = p.size();
+    int maxProfit = 0;
+    // you can not sell on first day so bought is INT_MIN or -1*a[0].
+    // Otherwise free state is updated to firstDay price, which is wrong.
+    int free = 0, bought = INT_MIN;
+    for(int i=0; i<n; i++) {
+        int cur = bought;
+        bought = max(bought, free - p[i]);
+        free = max(free, cur + p[i]);
+    }
+    return free;
+}
+
+```
+
+[Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/)
+
+& 
+
+[Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/description/)
+
+```cpp
+/*
+This can be generalized for atmost k transactions. 
+Article - 
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/solutions/54125/very-understandable-solution-by-reusing-problem-iii-idea/
+
+The idea is that, the solution for any 
+
+dp[ithPosition][kTransactions] comes from all i (or previous) so far and the (k-1)th transaction.
+
+
+for(i=1; i<=n; i++) {
+    for(t=1; t<=k; t++) {
+        // either keep the state same [same k] or increase the transaction from last sell
+        buy[i][k] = max(buy[i-1][k], sell[i-1][k-1] - p[i-1]);
+
+        // sell for kth transaction or carry the answer from previous index 
+        sell[i][k] = max(sell[i-1][k], buy[i-1][k] + p[i-1]);
+    }
+}
+*/
+
+
+// This can further be optimized for space
+vector<int> buy(K+1, INT_MIN), sell(K+1, INT_MIN);
+
+for(int price:prices) {
+    for(int k=1; k<=K; k++) {
+        buy[k] = max(buy[k], sell[k-1] - price);
+        sell[k] = max(sell[k], buy[k] + price);
+    }
+}
+
+return sell[k];
+```
+
+[Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/)
+
+[Best Time to Buy and Sell Stock with Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/description/)
+
+
+**Note : Read and understand the [Article on LC](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/solutions/108870/most-consistent-ways-of-dealing-with-the-series-of-stock-problems/)**
