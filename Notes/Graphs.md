@@ -375,7 +375,7 @@ Source - https://cp-algorithms.com/graph/dijkstra_sparse.html
 
 Practice Problems 
 1. https://leetcode.com/problems/network-delay-time/description/
-2. https://leetcode.com/problems/path-with-minimum-effort/description/
+2. https://leetcode.com/problems/path-with-minimum-effort/description/ (Good problem)
 3. https://leetcode.com/problems/cheapest-flights-within-k-stops/description/ (Good Problem)
 
 
