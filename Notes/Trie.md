@@ -111,3 +111,20 @@ int main() {
 
 
 ```
+
+## Problems
+
+https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/ (very good xor problem)
+
+https://leetcode.com/problems/prefix-and-suffix-search/ (hard)
+
+https://leetcode.com/problems/maximum-xor-with-an-element-from-array/description/ (tuff)
+
+https://leetcode.com/problems/word-search-ii/ (V. hard)
+
+https://leetcode.com/problems/concatenated-words/description/ 
+
+https://leetcode.com/problems/longest-word-in-dictionary/description/
+
+
+

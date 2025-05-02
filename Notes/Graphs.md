@@ -493,3 +493,8 @@ https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/0
 https://leetcode.com/problems/find-eventual-safe-states/description/ (Good Question on cycles)
 
 https://leetcode.com/problems/cheapest-flights-within-k-stops/description/ (V good problem on BFS)
+
+https://leetcode.com/problems/path-with-minimum-effort/ (dijkstra style algo)
+
+https://leetcode.com/problems/swim-in-rising-water/description/ (dijkstra style algo, similar to above problem)
+
